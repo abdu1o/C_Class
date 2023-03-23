@@ -1,5 +1,6 @@
 ﻿#include <iostream>
 #include <stdexcept>
+#include <fstream>
 using namespace std;
 
 class Fraction
@@ -52,6 +53,18 @@ public:
         double solution = (numerator * num) / static_cast<double>(denominator);
         cout << numerator << '/' << denominator << " * " << num << " = " << solution << endl;
     }
+
+    void save(ofstream& data) 
+    {
+        data << numerator << endl;
+        data << denominator << endl;
+    }
+
+    void load(ifstream& data) 
+    {
+        data >> numerator;
+        data >> denominator;
+    }
 };
 
 int main()
@@ -67,20 +80,31 @@ int main()
 
     try
     {
-        Fraction object;
-        object.set(numerator, denominator);
+        Fraction obj;
+        obj.set(numerator, denominator);
 
         cout << "Enter number: ";
         cin >> num;
 
         cout << "\n\n";
 
-        object.show();
-        object.plus(num);
-        object.minus(num);
-        object.multiplication(num);
-        object.division(num);
-        object.division(0);
+        ofstream file1("data.txt");
+        obj.save(file1);
+        file1.close();
+
+        obj.show();
+        obj.plus(num);
+        obj.minus(num);
+        obj.multiplication(num);
+        obj.division(num);
+
+        Fraction new_obj;
+        ifstream file2("data.txt");
+        new_obj.load(file2);
+        file2.close();
+
+        cout << "\nNew object data after load: ";
+        new_obj.show();  
     }
     catch (const invalid_argument& e)
     {
